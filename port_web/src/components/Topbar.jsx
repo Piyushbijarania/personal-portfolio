@@ -1,7 +1,15 @@
 // import "remixicon/fonts/remixicon.css";
 
 
-export function Topbar() {
+export function Topbar({ lenisRef }) {
+  const handleScroll = (id) => (e) => {
+    e.preventDefault();
+    const el = document.getElementById(id);
+    if (el && lenisRef?.current) {
+      lenisRef.current.scrollTo(el, { offset: -24 });
+    }
+  };
+
   return (
     <div className="fixed top-5 left-1/2 transform -translate-x-1/2 w-[90vw] max-w-4xl h-16 bg-stone-100/10 backdrop-blur-md z-50 rounded-full shadow-lg border border-gray-200 flex items-center justify-between px-8">
       <div className="text-xl space-x-6 text-gray-500 pb-1 ">
@@ -16,8 +24,8 @@ export function Topbar() {
         </a>
       </div>
       <div className="space-x-6 text-xl  text-gray-500 pb-1">
-        <a href="#" className="hover:text-stone-300 "> Projects</a>
-        <a href="#about" className="hover:text-stone-300">About</a>
+        <a href="#projects" onClick={handleScroll('projects')} className="hover:text-stone-300 "> Projects</a>
+        <a href="#about" onClick={handleScroll('about')} className="hover:text-stone-300">About</a>
       </div>
     </div>
   )

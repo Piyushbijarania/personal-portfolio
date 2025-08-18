@@ -9,15 +9,15 @@ const MOBILE_BREAKPOINT = 768;
 const cardData = [
   {
     color: "#060010",
-    title: "Photo Booth",
+    title: "Anisight Landing Page",
     description: (
       <>
-        <span className="block font-semibold">Tech:</span> React, Node.js, Express, MongoDB, Cloudinary
+        <span className="block font-semibold">Tech:</span> React, Vite, Tailwind CSS, Figma
         <br />
-        <span className="block font-semibold">Impact:</span> Interactive web app for capturing, editing, and sharing photos with real-time filters and cloud storage.
+        <span className="block font-semibold">Impact:</span> Visually engaging, responsive landing page for Anisight, focused on modern design and conversions.
         <br />
         <a
-          href="https://github.com/Piyushbijarania/photo-booth"
+          href="https://github.com/Piyushbijarania/anisight-landing-page"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block mt-2 text-purple-400 underline"
@@ -33,9 +33,9 @@ const cardData = [
     title: "WebWallet",
     description: (
       <>
-        <span className="block font-semibold">Tech:</span> Node.js, Express, MongoDB, JWT, Tailwind CSS
+        <span className="block font-semibold">Tech:</span> React, Material-UI, ethers.js, @solana/web3.js, bip39
         <br />
-        <span className="block font-semibold">Impact:</span> Secure digital wallet for easy transactions, account management, and real-time balance tracking.
+        <span className="block font-semibold">Impact:</span> Click Create New Wallet to save a mnemonic, use Load Wallet with your phrase to access it, and switch between Ethereum or Solana tabs to Derive New Address.
         <br />
         <a
           href="https://github.com/Piyushbijarania/webWallet"
@@ -54,9 +54,10 @@ const cardData = [
     title: "Ticket System",
     description: (
       <>
-        <span className="block font-semibold">Tech:</span> React, Node.js, MongoDB, Socket.io
+        <span className="block font-semibold">Tech:</span> React, Node.js, Typescript, MOVE.
         <br />
         <span className="block font-semibold">Impact:</span> Real-time ticketing system for issue tracking, team collaboration, and customer support.
+        <span className="block font-semibold">IN PROGRESS</span> 
         <br />
         <a
           href="https://github.com/Piyushbijarania/Ticket-System"
@@ -72,15 +73,15 @@ const cardData = [
   },
   {
     color: "#060010",
-    title: "Anisight Landing Page",
+    title: "Photo Booth",
     description: (
       <>
-        <span className="block font-semibold">Tech:</span> React, Vite, Tailwind CSS, Figma
+        <span className="block font-semibold">Tech:</span> Typescript, JS, HTML, CSS.
         <br />
-        <span className="block font-semibold">Impact:</span> Visually engaging, responsive landing page for Anisight, focused on modern design and conversions.
+        <span className="block font-semibold">Impact:</span> Interactive web app for capturing, editing, and sharing photos with real-time filters and cloud storage.
         <br />
         <a
-          href="https://github.com/Piyushbijarania/anisight-landing-page"
+          href="https://github.com/Piyushbijarania/photo-booth"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block mt-2 text-purple-400 underline"
