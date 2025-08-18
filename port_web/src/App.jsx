@@ -1,27 +1,71 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import Lenis from 'lenis';
 import './App.css'
 import { Topbar } from './components/Topbar'
 import { LongLine } from './components/LongLine'
 import ProfileCard from './components/ProfileCard'
+import ScrollStack, { ScrollStackItem } from './components/ScrollStack'
 // import "remixicon/fonts/remixicon.css";
 
 function App() {
   const [count, setCount] = useState(0)
+  const lenisRef = useRef(null);
+
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      touchMultiplier: 2,
+      infinite: false,
+      wheelMultiplier: 1,
+      lerp: 0.1,
+      syncTouch: true,
+      syncTouchLerp: 0.075,
+    });
+    lenisRef.current = lenis;
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+    return () => {
+      if (lenisRef.current) {
+        lenisRef.current.destroy();
+      }
+    };
+  }, []);
 
   return (
     <>
-      <div className=" flex flex-col  justify-center min-h-screen bg-black text-stone-400 text-2xl">
+      <div className="flex flex-col justify-center bg-black text-stone-400 text-2xl">
         <Topbar />
         <LongLine />
         <div className="w-full max-w-4xl pt-24 mx-auto pl-20">
-          <div className='flex pt-6'>
+          <div className='w-full pt-6 '>
+            <ScrollStack>
+              <ScrollStackItem itemClassName="bg-stone-300">
+                <h2>Project 1</h2>
+                <p>This is the first card in the stack</p>
+              </ScrollStackItem>
+              <ScrollStackItem itemClassName="bg-stone-300">
+                <h2>Project 2</h2>
+                <p>This is the second card in the stack</p>
+              </ScrollStackItem>
+              <ScrollStackItem itemClassName="bg-stone-300">
+                <h2>Project 3</h2>
+                <p>This is the third card in the stack</p>
+              </ScrollStackItem>
+            </ScrollStack>
+          </div>
+          <div className='flex ' id="about">
                 <ProfileCard
                   name="Piyush Choudhary"
                   title="Engineer"
                   handle=""
                   status=""
                   contactText=""
-                  avatarUrl="public/ProfileCard.jpg"
+                  avatarUrl="/ProfileCard.jpg"
                   showUserInfo={false}
                   enableTilt={true}
                   enableMobileTilt={false}
@@ -35,87 +79,7 @@ function App() {
                     </h3>
                   </div>
           </div>
-          <div>
-            <h2 className="text-4xl font-bold">Projects</h2>
-            <p className="mt-2">Here are some of my recent projects:</p>
-            <ul className="list-disc list-inside">
-              <li>Project 1</li>
-              <li>Project 2</li>
-              <li>Project 3</li>
-            </ul>
-          </div>
-          <div>
-            <h2 className="text-4xl font-bold">Projects</h2>
-            <p className="mt-2">Here are some of my recent projects:</p>
-            <ul className="list-disc list-inside">
-              <li>Project 1</li>
-              <li>Project 2</li>
-              <li>Project 3</li>
-            </ul>
-          </div>
-          <div>
-            <h2 className="text-4xl font-bold">Projects</h2>
-            <p className="mt-2">Here are some of my recent projects:</p>
-            <ul className="list-disc list-inside">
-              <li>Project 1</li>
-              <li>Project 2</li>
-              <li>Project 3</li>
-            </ul>
-          </div>
-          <div>
-            <h2 className="text-4xl font-bold">Projects</h2>
-            <p className="mt-2">Here are some of my recent projects:</p>
-            <ul className="list-disc list-inside">
-              <li>Project 1</li>
-              <li>Project 2</li>
-              <li>Project 3</li>
-            </ul>
-          </div>
-          <div>
-            <h2 className="text-4xl font-bold">Projects</h2>
-            <p className="mt-2">Here are some of my recent projects:</p>
-            <ul className="list-disc list-inside">
-              <li>Project 1</li>
-              <li>Project 2</li>
-              <li>Project 3</li>
-            </ul>
-          </div>
-          <div>
-            <h2 className="text-4xl font-bold">Projects</h2>
-            <p className="mt-2">Here are some of my recent projects:</p>
-            <ul className="list-disc list-inside">
-              <li>Project 1</li>
-              <li>Project 2</li>
-              <li>Project 3</li>
-            </ul>
-          </div>
-          <div>
-            <h2 className="text-4xl font-bold">Projects</h2>
-            <p className="mt-2">Here are some of my recent projects:</p>
-            <ul className="list-disc list-inside">
-              <li>Project 1</li>
-              <li>Project 2</li>
-              <li>Project 3</li>
-            </ul>
-          </div>
-          <div>
-            <h2 className="text-4xl font-bold">Projects</h2>
-            <p className="mt-2">Here are some of my recent projects:</p>
-            <ul className="list-disc list-inside">
-              <li>Project 1</li>
-              <li>Project 2</li>
-              <li>Project 3</li>
-            </ul>
-          </div>
-          <div>
-            <h2 className="text-4xl font-bold">Projects</h2>
-            <p className="mt-2">Here are some of my recent projects:</p>
-            <ul className="list-disc list-inside">
-              <li>Project 1</li>
-              <li>Project 2</li>
-              <li>Project 3</li>
-            </ul>
-          </div>
+          
         </div>
       </div>
     </>
