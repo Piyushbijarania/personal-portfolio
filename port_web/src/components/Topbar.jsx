@@ -18,7 +18,6 @@ export function Topbar() {
       <div className="space-x-6 text-xl  text-gray-500 pb-1">
         <a href="#" className="hover:text-stone-300 "> Projects</a>
         <a href="#about" className="hover:text-stone-300">About</a>
-        <a href="#" className="hover:text-stone-300">Contact</a>
       </div>
     </div>
   )

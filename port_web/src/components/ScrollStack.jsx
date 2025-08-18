@@ -13,6 +13,8 @@ export const ScrollStackItem = ({ children, itemClassName = "" }) => (
   </div>
 );
 
+const lerp = (a, b, n) => a + (b - a) * n;
+
 const ScrollStack = ({
   children,
   className = "",
@@ -27,13 +29,16 @@ const ScrollStack = ({
   blurAmount = 0,
   onStackComplete,
 }) => {
-  // No scrollerRef, global scroll only
+  const cardsRef = useRef([]);
+  const lastTransforms = useRef([]);
   const stackCompletedRef = useRef(false);
   const animationFrameRef = useRef(null);
-  const lenisRef = useRef(null);
-  const cardsRef = useRef([]);
   const lastTransformsRef = useRef(new Map());
   const isUpdatingRef = useRef(false);
+
+  // Track scroll direction
+  const lastScrollYRef = useRef(window.scrollY);
+  const scrollDirectionRef = useRef("down");
 
   const calculateProgress = useCallback((scrollTop, start, end) => {
     if (scrollTop < start) return 0;
@@ -48,13 +53,19 @@ const ScrollStack = ({
     return parseFloat(value);
   }, []);
 
-  const lastScrollYRef = useRef(window.scrollY);
-  const SCROLL_THRESHOLD = 2; // Only update if scroll changes by 2px or more
-
   const updateCardTransforms = useCallback(() => {
     if (!cardsRef.current.length || isUpdatingRef.current) return;
     isUpdatingRef.current = true;
     const scrollTop = window.scrollY;
+
+    // Detect scroll direction
+    if (scrollTop > lastScrollYRef.current) {
+      scrollDirectionRef.current = "down";
+    } else if (scrollTop < lastScrollYRef.current) {
+      scrollDirectionRef.current = "up";
+    }
+    lastScrollYRef.current = scrollTop;
+
     const containerHeight = window.innerHeight;
     const endElement = document.querySelector('.scroll-stack-end');
     const endElementTop = endElement ? endElement.getBoundingClientRect().top + window.scrollY : 0;
@@ -118,23 +129,38 @@ const ScrollStack = ({
       return { card, i, newTransform };
     });
 
-    // 3. Batch all DOM writes
+    // 3. Batch all DOM writes, using dynamic lerp factor
     transforms.forEach((t, i) => {
       if (!t) return;
       const { card, newTransform } = t;
       const lastTransform = lastTransformsRef.current.get(i);
-      const hasChanged = !lastTransform || 
-        Math.abs(lastTransform.translateY - newTransform.translateY) > 0.1 ||
+
+      // Use a higher lerp factor when scrolling down (less smoothing)
+      const lerpFactor = scrollDirectionRef.current === "down" ? 0.5 : 0.15;
+
+      // Smooth only translateY
+      const smoothedTranslateY = lerp(
+        lastTransform?.translateY || 0,
+        newTransform.translateY,
+        lerpFactor
+      );
+
+      const hasChanged =
+        !lastTransform ||
+        Math.abs(smoothedTranslateY - (lastTransform?.translateY || 0)) > 0.1 ||
         Math.abs(lastTransform.scale - newTransform.scale) > 0.001 ||
         Math.abs(lastTransform.rotation - newTransform.rotation) > 0.1 ||
         Math.abs(lastTransform.blur - newTransform.blur) > 0.1;
 
       if (hasChanged) {
-        const transform = `translate3d(0, ${newTransform.translateY}px, 0) scale(${newTransform.scale}) rotate(${newTransform.rotation}deg)`;
+        const transform = `translate3d(0, ${smoothedTranslateY}px, 0) scale(${newTransform.scale}) rotate(${newTransform.rotation}deg)`;
         const filter = newTransform.blur > 0 ? `blur(${newTransform.blur}px)` : '';
         card.style.transform = transform;
         card.style.filter = filter;
-        lastTransformsRef.current.set(i, newTransform);
+        lastTransformsRef.current.set(i, {
+          ...newTransform,
+          translateY: smoothedTranslateY,
+        });
       }
     });
 
@@ -227,10 +253,19 @@ const ScrollStack = ({
     handleScroll,
   ]);
 
+  // Attach refs to each card
+  const childrenWithRefs = Array.isArray(children)
+    ? children.map((child, i) =>
+        child
+          ? { ...child, ref: (el) => (cardsRef.current[i] = el) }
+          : child
+      )
+    : children;
+
   return (
     <div className={`relative w-full ${className}`.trim()}>
       <div className="scroll-stack-inner pt-[20vh] px-20 pb-[50rem] min-h-screen">
-        {children}
+        {childrenWithRefs}
         {/* Spacer so the last pin can release cleanly */}
         <div className="scroll-stack-end w-full h-px" />
       </div>
